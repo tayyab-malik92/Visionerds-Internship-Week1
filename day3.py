@@ -11,8 +11,7 @@ client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
-
-print("🤖 AI Chatbot - Main Development Branch")
+print("Visionerds AI Chatbot - Made by Tayyab")
 print("Type 'exit' to quit.\n")
 
 while True:
