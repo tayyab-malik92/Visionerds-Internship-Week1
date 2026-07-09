@@ -10,11 +10,18 @@ Learn how to use an LLM API with Python and build a Persona Bot.
 - python-dotenv
 
 ## Features
-- Connected to Groq LLM
-- Used environment variables for API keys
-- Implemented System Prompt and User Prompt
-- Built an AI Engineering Mentor Persona
-- Tested multiple prompts
+
+- Interactive AI chatbot using Groq API
+- AI Prompt Engineering Mentor persona
+- Dynamic user input
+- Empty input validation
+- Greeting detection
+- Response time measurement
+- Terminal commands (`clear`, `exit`)
+- Secure API key management with `.env`
+- Configurable system prompt (`config.py`)
+- Robust error handling
+- Git version control with feature branches
 
 ## How to Run
 
