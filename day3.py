@@ -1,12 +1,16 @@
 import os
+import re
 import time
 from dotenv import load_dotenv
 from openai import OpenAI
-from colorama import Fore, Style, init
+from colorama import Fore, init
 from config import SYSTEM_PROMPT
 
-init(autoreset=True)
+# -----------------------------
+# Initialization
+# -----------------------------
 
+init(autoreset=True)
 load_dotenv()
 
 client = OpenAI(
@@ -14,83 +18,198 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-print("=" * 60)
-print(Fore.CYAN + "Visionerds AI Chatbot")
-print(Fore.CYAN + "Created by: Muhammad Tayyab Malik")
-print(Fore.GREEN + "Model : Llama 3.3 70B")
-print(Fore.GREEN + "Provider : Groq")
-print(Fore.GREEN + "Status : Online ✅")
-print("=" * 60)
+# Greetings handled locally
+GREETINGS = {
+    "hi", "hello", "hey", "assalamualaikum", "salam"
+}
 
-print("\nAvailable Commands")
-print("--------------------------")
-print("clear - Clear terminal")
-print("exit  - Quit chatbot\n")
+# Casual conversation handled locally
+CASUAL_INPUTS = {
+    "ok", "okay", "fine", "good",
+    "im ok", "i am ok", "i'm ok",
+    "thanks", "thank you",
+    "bye",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "how are you",
+    "whats up",
+    "what's up",
+    "sup"
+}
 
-while True:
 
-    user_input = input(Fore.YELLOW + "You: ").strip()
+# -----------------------------
+# UI Functions
+# -----------------------------
 
-    # Empty message
-    if not user_input:
-        print(Fore.RED + "⚠ Please enter a message.\n")
-        continue
+def show_banner():
+    print(Fore.CYAN + "=" * 65)
+    print(Fore.CYAN + "              Visionerds AI Chatbot")
+    print(Fore.CYAN + "                  Version 1.1")
+    print(Fore.WHITE + "       Developed by: Muhammad Tayyab Malik")
+    print(Fore.GREEN + "-" * 65)
+    print(Fore.GREEN + " Model    : Llama 3.3 70B")
+    print(Fore.GREEN + " Provider : Groq")
+    print(Fore.GREEN + " Status   :  Online")
+    print(Fore.CYAN + "=" * 65)
 
-    # Exit
-    if user_input.lower() == "exit":
-        print(Fore.GREEN + "\nGoodbye! 👋")
-        break
+    print(Fore.YELLOW + "\nAvailable Commands")
+    print(Fore.YELLOW + "-" * 25)
+    print(" clear  → Clear terminal")
+    print(" about  → Chatbot information")
+    print(" exit   → Quit chatbot")
 
-   
+    print(
+        Fore.CYAN +
+        "\n💡 Ask anything about AI, Python, Machine Learning,\n"
+        "   Prompt Engineering, Git or Programming.\n"
+    )
 
-    # Clear screen
-    if user_input.lower() == "clear":
-        os.system("cls" if os.name == "nt" else "clear")
-        continue
 
-    # Greeting (No API call)
-    greetings = ["hi", "hello", "hey"]
+def show_about():
+    print(Fore.CYAN)
+    print("=" * 45)
+    print("Visionerds AI Chatbot")
+    print("Version   : 1.1")
+    print("Developer : Muhammad Tayyab Malik")
+    print("Model     : Llama 3.3 70B")
+    print("Provider  : Groq")
+    print("=" * 45)
+    print()
 
-    if user_input.lower() in greetings:
-        print(
-            Fore.CYAN +
-            "\nAI: Hello! I am your AI Prompt Engineering Mentor."
-            "\nAsk me anything about AI, Python, Machine Learning, Git, Prompt Engineering or Programming.\n"
-        )
-        continue
 
-    try:
+# -----------------------------
+# Validation
+# -----------------------------
 
-        start = time.time()
+def is_valid_query(text):
 
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            temperature=0.3,
-            messages=[
-                {
-                    "role": "system",
-                    "content": SYSTEM_PROMPT
-                },
-                {
-                    "role": "user",
-                    "content": user_input
-                }
-            ]
-        )
+    text = text.strip().lower()
 
-        end = time.time()
+    if not text:
+        return False
 
-        print(Fore.CYAN + "\nAI:")
-        print(response.choices[0].message.content)
+    if len(text) < 4:
+        return False
 
-        print(
-            Fore.GREEN +
-            f"\n⏱ Response Time : {end-start:.2f} seconds\n"
-        )
+    if text.isdigit():
+        return False
 
-    except Exception as e:
+    if re.fullmatch(r'[^a-zA-Z0-9]+', text):
+        return False
 
-        print(Fore.RED + "\n❌ Unable to contact the AI.")
-        print(Fore.RED + "Please check your internet connection or API key.")
+    if re.fullmatch(r'(.)\1{3,}', text):
+        return False
 
-        print(Fore.YELLOW + f"\n[DEBUG] {e}\n")
+    return True
+
+
+# -----------------------------
+# AI Function
+# -----------------------------
+
+def get_ai_response(user_input):
+
+    start = time.time()
+
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        temperature=0.2,
+        messages=[
+            {
+                "role": "system",
+                "content": SYSTEM_PROMPT
+            },
+            {
+                "role": "user",
+                "content": user_input
+            }
+        ]
+    )
+
+    end = time.time()
+
+    print(Fore.CYAN)
+    print("─" * 65)
+    print(" AI Response")
+    print("─" * 65)
+
+    print(response.choices[0].message.content)
+
+    print("─" * 65)
+
+    print(Fore.GREEN + f"\n Response Time: {end-start:.2f} sec\n")
+
+
+# -----------------------------
+# Main
+# -----------------------------
+
+def main():
+
+    show_banner()
+
+    while True:
+
+        user_input = input(Fore.YELLOW + "You: ").strip()
+
+        if user_input.lower() == "exit":
+            print(Fore.GREEN)
+            print("\nThank you for using Visionerds AI Chatbot.")
+            print("Happy Learning!")
+            print("Goodbye! 👋")
+            break
+
+        if user_input.lower() == "clear":
+            os.system("cls" if os.name == "nt" else "clear")
+            show_banner()
+            continue
+
+        if user_input.lower() == "about":
+            show_about()
+            continue
+
+        if not user_input:
+            print(Fore.RED)
+            print(" Input cannot be empty.")
+            print("Please ask a question related to AI or Programming.\n")
+            continue
+
+        if not is_valid_query(user_input):
+            print(Fore.RED)
+            print(" Please enter a meaningful AI or programming-related question.\n")
+            continue
+
+        if user_input.lower() in GREETINGS:
+            print(Fore.CYAN)
+            print("Hello!")
+            print("I am your AI Prompt Engineering Mentor.")
+            print("How can I help you today?\n")
+            continue
+
+        if user_input.lower() in CASUAL_INPUTS:
+            print(Fore.CYAN)
+            print("I am an AI Prompt Engineering Mentor.")
+            print("Please ask a question related to AI, Python,")
+            print("Machine Learning, Prompt Engineering, Git or Programming.\n")
+            continue
+
+        try:
+            get_ai_response(user_input)
+
+        except Exception as e:
+
+            print(Fore.RED)
+            print("=" * 50)
+            print("❌ ERROR")
+            print("=" * 50)
+            print("Unable to contact the AI.")
+            print("Check your internet connection or API key.")
+            print("=" * 50)
+
+            print(Fore.YELLOW + f"\n[DEBUG]: {e}\n")
+
+
+if __name__ == "__main__":
+    main()
