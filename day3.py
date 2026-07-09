@@ -11,31 +11,40 @@ client = OpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
-
-print("🤖 AI Chatbot Started made by TAYYAB!")
+print("Visionerds AI Chatbot - Made by Tayyab")
 print("Type 'exit' to quit.\n")
 
 while True:
     user_input = input("You: ")
+
     if not user_input.strip():
-     continue
+        continue
+
     if user_input.lower() == "exit":
         print("Goodbye! 👋")
         break
 
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        temperature=0.7,
-        messages=[
-            {
-                "role": "system",
-                "content": SYSTEM_PROMPT
-            },
-            {
-                "role": "user",
-                "content": user_input
-            }
-        ]
-    )
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            temperature=0.7,
+            messages=[
+                {
+                    "role": "system",
+                    "content": SYSTEM_PROMPT
+                },
+                {
+                    "role": "user",
+                    "content": user_input
+                }
+            ]
+        )
 
-    print("AI:", response.choices[0].message.content)
+        print("\nAI:", response.choices[0].message.content)
+
+    except Exception as e:
+        print("\n❌ Unable to contact the AI.")
+        print("Please check your internet connection or API key and try again.")
+
+        # Developer log (for debugging)
+        print(f"[DEBUG]: {e}")
