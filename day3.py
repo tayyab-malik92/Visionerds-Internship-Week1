@@ -12,7 +12,7 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-print("🤖 AI Chatbot Started made by TAYYAB!")
+print("🤖 AI Chatbot - Main Development Branch")
 print("Type 'exit' to quit.\n")
 
 while True:
