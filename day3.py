@@ -24,7 +24,6 @@ print("=" * 60)
 
 print("\nAvailable Commands")
 print("--------------------------")
-print("help  - Show commands")
 print("clear - Clear terminal")
 print("exit  - Quit chatbot\n")
 
@@ -42,16 +41,7 @@ while True:
         print(Fore.GREEN + "\nGoodbye! 👋")
         break
 
-    # Help
-    if user_input.lower() == "help":
-        print("""
-Commands
---------
-help   -> Show commands
-clear  -> Clear terminal
-exit   -> Quit chatbot
-""")
-        continue
+   
 
     # Clear screen
     if user_input.lower() == "clear":
