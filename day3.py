@@ -6,9 +6,6 @@ from openai import OpenAI
 from colorama import Fore, init
 from config import SYSTEM_PROMPT
 
-# -----------------------------
-# Initialization
-# -----------------------------
 
 init(autoreset=True)
 load_dotenv()
@@ -18,12 +15,11 @@ client = OpenAI(
     base_url="https://api.groq.com/openai/v1"
 )
 
-# Greetings handled locally
 GREETINGS = {
-    "hi", "hello", "hey", "assalamualaikum", "salam"
+    "hi", "hello", "hey", "assalamualaikum", "salam, aoa"
 }
 
-# Casual conversation handled locally
+
 CASUAL_INPUTS = {
     "ok", "okay", "fine", "good",
     "im ok", "i am ok", "i'm ok",
@@ -39,9 +35,7 @@ CASUAL_INPUTS = {
 }
 
 
-# -----------------------------
-# UI Functions
-# -----------------------------
+#ui ux
 
 def show_banner():
     print(Fore.CYAN + "=" * 65)
@@ -78,10 +72,7 @@ def show_about():
     print("=" * 45)
     print()
 
-
-# -----------------------------
-# Validation
-# -----------------------------
+#validation
 
 def is_valid_query(text):
 
@@ -105,9 +96,7 @@ def is_valid_query(text):
     return True
 
 
-# -----------------------------
-# AI Function
-# -----------------------------
+
 
 def get_ai_response(user_input):
 
@@ -142,9 +131,6 @@ def get_ai_response(user_input):
     print(Fore.GREEN + f"\n Response Time: {end-start:.2f} sec\n")
 
 
-# -----------------------------
-# Main
-# -----------------------------
 
 def main():
 
